@@ -1,0 +1,38 @@
+diff --git a/libyul/optimiser/Suite.cpp b/libyul/optimiser/Suite.cpp
+index 295e3e8fd..fe6981007 100644
+--- a/libyul/optimiser/Suite.cpp
++++ b/libyul/optimiser/Suite.cpp
+@@ -175,20 +175,8 @@ void OptimiserSuite::run(
+ 	// Now the user-supplied part
+ 	suite.runSequence(_optimisationSequence, ast, false);
+ 
+-	// This is a tuning parameter, but actually just prevents infinite loops.
+-	size_t stackCompressorMaxIterations = 16;
+ 	suite.runSequence("g", ast, true);
+ 
+-	// We ignore the return value because we will get a much better error
+-	// message once we perform code generation.
+-	if (!usesOptimizedCodeGenerator)
+-		StackCompressor::run(
+-			_dialect,
+-			_object,
+-			_optimizeStackAllocation,
+-			stackCompressorMaxIterations
+-		);
+-
+ 	s_cleanupSequenceStart[s_cleanupSequenceStart.size() - 1] = s_sequenceInfo[s_cleanupSequenceStart.size() - 1].size();
+ 
+ 	// Run the user-supplied clean up sequence
+@@ -204,12 +192,6 @@ void OptimiserSuite::run(
+ 		ConstantOptimiser{*evmDialect, *_meter}(ast);
+ 		if (usesOptimizedCodeGenerator)
+ 		{
+-			StackCompressor::run(
+-				_dialect,
+-				_object,
+-				_optimizeStackAllocation,
+-				stackCompressorMaxIterations
+-			);
+ 			if (evmDialect->providesObjectAccess())
+ 				StackLimitEvader::run(suite.m_context, _object);
+ 		}

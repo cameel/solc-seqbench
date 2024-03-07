@@ -131,17 +131,18 @@ optimization: output/optimization-info.json
 execution: output/execution-info.json
 analysis: $(all_sequence_targets) $(all_contract_targets) $(all_sequence_contract_targets)
 
-solidity/: solc-sequence-info-dump.patch
+solidity/: solc-sequence-info-dump.patch solc-no-stack-compressor.patch
 	branch="fix-superfluous-iterations-in-optimizer-sequence"
 
 	git clone https://github.com/ethereum/solidity --branch "$$branch" --depth 1
 	cd solidity/
 	git apply --verbose ../solc-sequence-info-dump.patch
+	git apply --verbose ../solc-no-stack-compressor.patch
 
 solc: solidity/
 	export CMAKE_OPTIONS="-DUSE_Z3=OFF -DUSE_CVC4=OFF -DSOLC_STATIC_STDLIBS=ON"
 	# TODO: Build only solc, without other executables
-	solidity/scripts/ci/build.sh seqbench
+	solidity/scripts/ci/build.sh seqbench-no-stack-compressor
 	strip solidity/build/solc/solc
 
 	mv solidity/build/solc/solc .
