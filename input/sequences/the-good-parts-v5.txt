@@ -12,7 +12,10 @@ CTUca[r]LSsTFOtfDnca[r]Iulc  # SSA plus simplify
 scCTUt
 gvif                         # Run full inliner
 [scCTUt] TOntnfDIul          # Perform structural simplification
+
+xa[r]cL                      # Turn into SSA again and simplify
 gvif                         # Run full inliner
+CTUca[r]LSsTFOtfDnca[r]Iulc  # SSA plus simplify
 
 jmul[jul] VcTOcul jmul       # Make source short and pretty
 
